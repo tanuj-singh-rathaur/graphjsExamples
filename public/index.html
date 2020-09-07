@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <link rel="stylesheet" href="css/Chart.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="js/Chart.min.js"></script>
+  </head>
+  <body>
+    <label id="selection">
+      <span>Select Country</span>
+      <select name="country" id="country"></select>
+    </label>
+    <div class="chart1 cotainer-fluid w-100 h-100">
+      <canvas id="myChart"></canvas>
+    </div>
+
+    <script>
+      const $country = document.querySelector("#country");
+
+      fetch(`getData`).then((response) => {
+        response.json().then((data) => {
+          data.forEach((element) => {
+            var opt = document.createElement("option");
+            opt.appendChild(document.createTextNode(element));
+            opt.value = element;
+            $country.appendChild(opt);
+          });
+
+          $country.addEventListener("change", getData);
+
+          function getData() {
+            fetch(`getData?Country=${this.value}`).then((response) => {
+              response.json().then((data) => {
+                drawChart1(data.data1);
+                drawChart2(data.data2);
+              });
+            });
+          }
+
+          function drawChart1(data1) {
+            const property = [],
+              values = [];
+            for (i = 2; i <= 14; i++) {
+              property.push(Object.keys(data1[0])[i]);
+              values.push(Object.values(data1[0])[i]);
+            }
+
+            var ctx = document.getElementById("myChart").getContext("2d");
+            var myChart = new Chart(ctx, {
+              type: "line",
+              data: {
+                labels: property,
+                datasets: [
+                  {
+                    label: "Country wise laest covid data",
+                    data: values,
+                    backgroundColor: [
+                      "red",
+                      "blue",
+                      "green",
+                      "grey",
+                      "orange",
+                      "violet",
+                      "indigo",
+                      "yellow",
+                      "rgba(54, 162, 235, 0.2)",
+                      "rgba(255, 206, 86, 0.2)",
+                      "rgba(75, 192, 192, 0.2)",
+                      "rgba(153, 102, 255, 0.2)",
+                      "rgba(255, 159, 64, 0.2)",
+                    ],
+                    borderColor: [
+                      "black",
+                      "black",
+                      "black",
+                      "black",
+                      "black",
+                      "black",
+                      "black",
+                      "black",
+                      "black",
+                      "black",
+                      "black",
+                      "black",
+                      "black",
+                    ],
+                    borderWidth: 1,
+                  },
+                ],
+              },
+            });
+          }
+
+          //ploting graph for 2nd datasets
+          function drawChart2(data2) {
+            const property = [],
+              values = [];
+            console.log(data2);
+            // for (i = 2; i <= 14; i++) {
+            //   property.push(Object.keys(data1[0])[i]);
+            //   values.push(Object.values(data1[0])[i]);
+            // }
+            // // const property = Object.keys(data[0]);
+            // // const values = Object.values(data[0]);
+            // var ctx = document.getElementById("myChart").getContext("2d");
+            // var myChart = new Chart(ctx, {
+            //   type: "line",
+            //   data: {
+            //     labels: property,
+            //     datasets: [
+            //       {
+            //         label: "Country wise laest covid data",
+            //         data: values,
+            //         backgroundColor: [
+            //           "red",
+            //           "blue",
+            //           "green",
+            //           "grey",
+            //           "orange",
+            //           "violet",
+            //           "indigo",
+            //           "yellow",
+            //           "rgba(54, 162, 235, 0.2)",
+            //           "rgba(255, 206, 86, 0.2)",
+            //           "rgba(75, 192, 192, 0.2)",
+            //           "rgba(153, 102, 255, 0.2)",
+            //           "rgba(255, 159, 64, 0.2)",
+            //         ],
+            //         borderColor: [
+            //           "black",
+            //           "black",
+            //           "black",
+            //           "black",
+            //           "black",
+            //           "black",
+            //           "black",
+            //           "black",
+            //           "black",
+            //           "black",
+            //           "black",
+            //           "black",
+            //           "black",
+            //         ],
+            //         borderWidth: 1,
+            //       },
+            //     ],
+            //   },
+            // });
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
